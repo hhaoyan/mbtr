@@ -1,3 +1,7 @@
+#ifndef _GEOMETRY_FUNCS_H_
+#define _GEOMETRY_FUNCS_H_
+
+#include <limits>
 #include "mbtr.h"
 
 class OneBodyCountingG {
@@ -5,12 +9,12 @@ class OneBodyCountingG {
 public:
     OneBodyCountingG() {
         _min = std::numeric_limits<double>::max();
-        _max = std::numeric_limits<double>::lowest();
+        _max = std::numeric_limits<double>::min();
     }
 
     void reset_minmax() {
         _min = std::numeric_limits<double>::max();
-        _max = std::numeric_limits<double>::lowest();
+        _max = std::numeric_limits<double>::min();
     }
 
     const std::pair<double, double> get_minmax() const {
@@ -32,12 +36,12 @@ class InverseDoubletDistanceG {
 public:
     InverseDoubletDistanceG() {
         _min = std::numeric_limits<double>::max();
-        _max = std::numeric_limits<double>::lowest();
+        _max = std::numeric_limits<double>::min();
     }
 
     void reset_minmax() {
         _min = std::numeric_limits<double>::max();
-        _max = std::numeric_limits<double>::lowest();
+        _max = std::numeric_limits<double>::min();
     }
 
     const std::pair<double, double> get_minmax() const {
@@ -65,12 +69,12 @@ class InverseTripletCosineAngleG {
 public:
     InverseTripletCosineAngleG() {
         _min = std::numeric_limits<double>::max();
-        _max = std::numeric_limits<double>::lowest();
+        _max = std::numeric_limits<double>::min();
     }
 
     void reset_minmax() {
         _min = std::numeric_limits<double>::max();
-        _max = std::numeric_limits<double>::lowest();
+        _max = std::numeric_limits<double>::min();
     }
 
     const std::pair<double, double> get_minmax() const {
@@ -102,3 +106,5 @@ public:
         return cosine;
     }
 };
+
+#endif // _GEOMETRY_FUNCS_H_

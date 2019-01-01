@@ -11,13 +11,16 @@ bool FitTensorLastDimRange(
         g_func g, w_func w, d_func d, corr_func corr) {
 
     output.first = std::numeric_limits<double>::max();
-    output.second = std::numeric_limits<double>::lowest();
+    output.second = std::numeric_limits<double>::min();
 
     for (auto system:systems) {
         MBTR<rank, g_func, w_func, d_func, corr_func> mbtr(system, 0.0, 1.0, 2, g, w, d, corr);
 
         size_t sz;
-        double *array = mbtr.WriteMBTRToArray(mbtr.NotNullAtomNumbers(), sz);
+        std::vector<uint> atom_numbers;
+
+        atom_numbers = mbtr.NotNullAtomNumbers();
+        double *array = mbtr.WriteMBTRToArray(atom_numbers, sz);
         if (array == nullptr) {
             return false;
         }

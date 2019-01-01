@@ -150,11 +150,11 @@ class MBTR {
 
     void CalculateMBTRInnerLoop(const std::vector<System::Atom> &atoms,
                                 uint z[], std::vector<double> &v,
-                                int current_rank) {
-        for (int j = 0; j < atoms.size(); ++j) {
+                                uint current_rank) {
+        for (size_t j = 0; j < atoms.size(); ++j) {
             selected_atoms_[current_rank] = &(atoms[j]);
 
-            for (int i = 0; i < current_rank; ++i) {
+            for (uint i = 0; i < current_rank; ++i) {
                 if (selected_atoms_[i] == selected_atoms_[current_rank])
                     goto done;
             }
@@ -164,11 +164,11 @@ class MBTR {
 
                 if (w > 1e-7) {
                     double corr_coef = 1.0;
-                    for (int i = 0; i < rank; ++i) {
+                    for (uint i = 0; i < rank; ++i) {
                         corr_coef *= corr_func_(z[i], selected_atoms_[i]->atom_number);
                     }
 
-                    for (int i = 0; i < v.size(); ++i) {
+                    for (size_t i = 0; i < v.size(); ++i) {
                         v[i] += w * d_func_(bounds_[i], g) * corr_coef;
                     }
                 }
@@ -191,12 +191,12 @@ class MBTR {
                 double w = w_func_(selected_atoms_);
 
                 double corr_coef = 1.0;
-                for (int i = 0; i < rank; ++i) {
+                for (uint i = 0; i < rank; ++i) {
                     corr_coef *= corr_func_(z[i], selected_atoms_[i]->atom_number);
                 }
 
                 if (std::abs(corr_coef) > 1e-6)
-                    for (int i = 0; i < v.size(); ++i) {
+                    for (size_t i = 0; i < v.size(); ++i) {
                         v[i] += w * d_func_(bounds_[i], g) * corr_coef;
                     }
             } else {
@@ -263,9 +263,9 @@ public:
         std::vector<double> v(bounds_.size(), 0.0);
 
         // early termination
-        for (int i = 0; i < rank; i++) {
+        for (uint i = 0; i < rank; i++) {
             bool found = false;
-            for (int j = 0; j < system_.atoms.size(); j++) {
+            for (size_t j = 0; j < system_.atoms.size(); j++) {
                 if (std::abs(corr_func_(system_.atoms[j].atom_number, z[i])) > 1e-3) {
                     found = true;
                     break;
@@ -301,7 +301,7 @@ public:
     double *WriteMBTRToArray(std::vector<uint> &an, size_t &array_size) {
         // FIXME: potential overflow.
         size_t buffer_total_size = bounds_.size();
-        for (auto i = 0; i < rank; i++) {
+        for (uint i = 0; i < rank; i++) {
             buffer_total_size *= an.size();
         }
         array_size = buffer_total_size;

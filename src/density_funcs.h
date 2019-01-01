@@ -71,13 +71,13 @@ public:
         int left_idx = (int) left;
         int right_idx = (int) right;
 
-        left_idx = left_idx < 0 ? 0 : left_idx;
-        left_idx = left_idx >= bins ? bins - 1 : left_idx;
-        right_idx = right_idx < 0 ? 0 : right_idx;
-        right_idx = right_idx >= bins ? bins - 1 : right_idx;
+        uint capped_left_idx = left_idx < 0 ? 0 : left_idx;
+        capped_left_idx = capped_left_idx >= bins ? bins - 1 : capped_left_idx;
+        uint capped_right_idx = right_idx < 0 ? 0 : right_idx;
+        capped_right_idx = capped_right_idx >= bins ? bins - 1 : capped_right_idx;
 
         // we should divide 2.0 here, but to speed up, we have already did this in the constructor
-        return (values_[right_idx] - values_[left_idx]);
+        return (values_[capped_right_idx] - values_[capped_left_idx]);
     }
 
     double operator()(double x) {

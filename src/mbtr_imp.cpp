@@ -161,7 +161,8 @@ bool UnpackSystem(PyObject *data, System &system) {
                 PyFloat_AsDouble(items[3])
         };
 
-        system.atoms.emplace_back(atom_number, position[0], position[1], position[2]);
+        system.atoms.push_back(
+            System::Atom(atom_number, position[0], position[1], position[2]));
     }
 
     return true;
