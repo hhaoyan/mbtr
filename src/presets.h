@@ -40,12 +40,12 @@ const char *PresetErrorMsg =
         "  153. Periodic\trank=2\tg=1/r\t\tw=exp(-r^2/D)\td=gaussian\tcorr=delta(z1, z2).\n"
         "  154. Periodic\trank=3\tg=cos(angle)\tw=exp(-(r1+r2+r3)/D)\td=gaussian\tcorr=delta(z1, z2).\n";
 
-#define RequirePeriodic(preset_id, info) if ((info).is_periodic) { \
+#define RequirePeriodic(preset_id, info) if (!(info).is_periodic) { \
     PyErr_SetString(PyExc_ValueError, \
             "Preset " #preset_id " only accepts crystal systems"); \
     return false;\
 }
-#define RequireMolecular(preset_id, info) if (!(info).is_periodic) { \
+#define RequireMolecular(preset_id, info) if ((info).is_periodic) { \
     PyErr_SetString(PyExc_ValueError, \
             "Preset " #preset_id " only accepts molecular systems"); \
     return false;\
