@@ -81,23 +81,11 @@ class TestCrystalMBTR(unittest.TestCase):
 
         self.assertEqual(ans, [11, 17])
 
-    def test_mbtr_integral(self):
-        aspirin = self.load_xyz('nacl.xyz', 1)
-        mbtr = MolsMBTR2D(grid_size=10, smearing_factor=0.1)
-        mbtr.fit(aspirin)
-        arrays, ans = mbtr.transform(aspirin)
+    def test_mbtr_shape(self):
+        nacl = self.load_xyz('nacl.xyz', 1)
+        mbtr = PeriodicMBTR2D(grid_size=10, smearing_factor=0.1)
+        mbtr.fit(nacl)
+        arrays, ans = mbtr.transform(nacl)
 
-        aspirin_array = arrays[0]
-        aspirin_array_sum = numpy.sum(aspirin_array, axis=2)
-
-        # We have 8 H, 9 C, 4 O.
-        # Diagonals: N(N-1)
-        # Off-diagonals: NxM
-        expected = numpy.array([
-            [56, 72, 32],
-            [72, 72, 36],
-            [32, 36, 12]
-        ])
-        self.assertTrue(numpy.all(
-            abs(aspirin_array_sum - expected) < 0.01
-        ), msg='Expected {0}, but got {1}'.format(expected, aspirin_array_sum))
+        nacl_array = arrays[0]
+        self.assertTupleEqual(nacl_array.shape, (2, 2, 10))

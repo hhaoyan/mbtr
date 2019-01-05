@@ -23,11 +23,11 @@ ELEMENTS = [
 ]
 
 
-def visualize_mbtr(array, an, x_range, rank):
+def visualize_mbtr(array, an, x_range, rank, title='Visualize'):
     fig = plt.figure()
 
-    for atom_tuple in itertools.combinations_with_replacement(an, rank):
-    # for atom_tuple in itertools.combinations(an, rank):
+    # for atom_tuple in itertools.combinations_with_replacement(an, rank):
+    for atom_tuple in itertools.product(an, repeat=rank):
         index = list(an.index(x) for x in atom_tuple)
         index.append(slice(0, array.shape[-1]))
         values = array[index]
@@ -39,43 +39,48 @@ def visualize_mbtr(array, an, x_range, rank):
     plt.xlabel('Geometry function')
     plt.ylabel('Density')
     fig.legend()
+    plt.title(title)
     fig.show()
 
 
 def visualize_aspirin():
     aspirin_fn = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
+        '..',
+        'mbtr',
         'test',
         'aspirin.xyz'
     )
     molecules = read_xyz_molecule(aspirin_fn)
 
-    mbtr = MolsMBTR2DIQuadW(grid_size=20, smearing_factor=0.023)
+    mbtr = MolsMBTR2DIQuadW(grid_size=200, smearing_factor=0.023)
     mbtr.fit(molecules)
     tensor_range = numpy.linspace(mbtr.tensor_range[0], mbtr.tensor_range[1], 200)
 
     arrays, ans = mbtr.transform(molecules)
     for array in arrays:
-        visualize_mbtr(array, ans, tensor_range, 2)
+        visualize_mbtr(array, ans, tensor_range, 2, title='Aspirin')
 
 
 def visualize_nacl():
     nacl_fn = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
+        '..',
+        'mbtr',
         'test',
         'nacl.xyz'
     )
     nacl = read_xyz_crystal(nacl_fn)
 
-    mbtr = PeriodicMBTR3D(grid_size=100, smearing_factor=0.05, d=2.5)
+    mbtr = PeriodicMBTR3D(grid_size=200, smearing_factor=0.03, d=3.0)
     mbtr.fit(nacl)
-    tensor_range = numpy.linspace(mbtr.tensor_range[0], mbtr.tensor_range[1], 100)
+    tensor_range = numpy.linspace(mbtr.tensor_range[0], mbtr.tensor_range[1], 200)
 
     arrays, ans = mbtr.transform(nacl)
     for array in arrays:
-        visualize_mbtr(array, ans, tensor_range, 3)
+        visualize_mbtr(array, ans, tensor_range, 3, title='NaCl')
 
 
-# visualize_aspirin()
-visualize_nacl()
+visualize_aspirin()
+# visualize_nacl()
 plt.show()
