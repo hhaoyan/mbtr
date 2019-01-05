@@ -2,13 +2,6 @@
 
 from setuptools import setup, find_packages, Extension
 
-mbtr_calc = Extension(
-    'mbtr.mbtr_imp',
-    language='c++',
-    sources=['src/mbtr_imp.cpp'],
-    extra_compile_args=['-std=c++11']
-)
-
 if __name__ == "__main__":
     setup(
         name='mbtr',
@@ -19,7 +12,14 @@ if __name__ == "__main__":
         author_email='hhaoyann@gmail.com',
         license='MIT',
         packages=find_packages(),
-        ext_modules=[mbtr_calc],
+        ext_modules=[
+            Extension(
+                'mbtr.mbtr_imp',
+                language='c++',
+                sources=['src/mbtr_imp.cpp'],
+                extra_compile_args=['-std=c++11', '-O3']
+            ),
+        ],
         zip_safe=False,
         classifiers=[
             'Programming Language :: Python :: 2.7',
@@ -30,5 +30,8 @@ if __name__ == "__main__":
             'Operating System :: OS Independent',
             'Topic :: Other/Nonlisted Topic',
             'Topic :: Scientific/Engineering'
+        ],
+        requires=[
+            'numpy',
         ]
     )
