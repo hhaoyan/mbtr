@@ -24,8 +24,8 @@ public:
     double operator()(const System::Atom *atoms[]) {
         auto v = static_cast<double>(atoms[0]->atom_number);
 
-        _min = Py_MIN(_min, v);
-        _max = Py_MAX(_max, v);
+        _min = std::min(_min, v);
+        _max = std::max(_max, v);
 
         return v;
     }
@@ -57,8 +57,8 @@ public:
 
         double v = 1.0f / distance;
 
-        _min = Py_MIN(_min, v);
-        _max = Py_MAX(_max, v);
+        _min = std::min(_min, v);
+        _max = std::max(_max, v);
 
         return v;
     }
@@ -100,8 +100,8 @@ public:
         double cosine = (distance1_squared + distance3_squared - distance2_squared)
                         / sqrt(4.0f * distance1_squared * distance3_squared);
 
-        _min = Py_MIN(_min, cosine);
-        _max = Py_MAX(_max, cosine);
+        _min = std::min(_min, cosine);
+        _max = std::max(_max, cosine);
 
         return cosine;
     }

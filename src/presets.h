@@ -17,8 +17,8 @@ typedef AccurateErfDensity ErfDensity;
 #endif
 
 struct PresetInfo {
-    std::vector<System> systems;
-    std::vector<uint> z;
+    std::vector <System> systems;
+    std::vector <uint> z;
 
     int preset;
     uint grid_size, rank;
@@ -116,7 +116,7 @@ bool PresetsFitMBTR(PresetInfo &info, std::pair<double, double> &output) {
     }
 }
 
-bool PresetsComputeMBTR(PresetInfo &info, std::vector<MBTRResult> &arrays) {
+bool PresetsComputeMBTR(PresetInfo &info, std::vector <MBTRResult> &arrays) {
     InverseTripletCosineAngleG g_3body_cos_angle;
     InverseDoubletDistanceG g_2body_inv_r;
     OneBodyCountingG g_1body_1;

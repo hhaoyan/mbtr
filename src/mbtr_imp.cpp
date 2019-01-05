@@ -34,8 +34,8 @@
  *          154. Periodic   rank=3  g=cos(angle)w=exp(-(r1+r2+r3)/D)    d=gaussian  corr=delta(z1, z2).
  * */
 
-std::vector<uint> AtomNumberList(std::vector<System> &systems) {
-    std::vector<uint> an;
+std::vector <uint> AtomNumberList(std::vector <System> &systems) {
+    std::vector <uint> an;
     for (const auto &system:systems) {
         for (auto i:system.atoms) {
             if (an.end() == std::find(an.begin(), an.end(), i.atom_number)) {
@@ -166,13 +166,13 @@ bool UnpackSystem(PyObject *data, System &system) {
         };
 
         system.atoms.push_back(
-            System::Atom(atom_number, position[0], position[1], position[2]));
+                System::Atom(atom_number, position[0], position[1], position[2]));
     }
 
     return true;
 }
 
-bool UnpackSystems(PyObject *data, std::vector<System> &systems) {
+bool UnpackSystems(PyObject *data, std::vector <System> &systems) {
     CheckTypeWithError(data, PyList_Check, "'systems' must be a list");
 
     auto n_atoms = PyList_Size(data);
@@ -227,7 +227,7 @@ static PyObject *compute(PyObject *, PyObject *args) {
         return nullptr;
     }
 
-    std::vector<MBTRResult> results;
+    std::vector <MBTRResult> results;
     if (!PresetsComputeMBTR(info, results)) {
         return nullptr;
     }
@@ -237,7 +237,7 @@ static PyObject *compute(PyObject *, PyObject *args) {
         return nullptr;
 
     for (auto &result : results) {
-        std::vector<uint> &atom_numbers = result.atom_number;
+        std::vector <uint> &atom_numbers = result.atom_number;
         PyObject *atom_numbers_list = PyList_New(0);
 
         if (atom_numbers_list == nullptr) {
@@ -310,7 +310,8 @@ static struct PyModuleDef module_def = {
 PyMODINIT_FUNC PyInit_mbtr_imp()
 #else
 #define INITERROR return
-void initmbtr_imp()
+
+extern "C" void initmbtr_imp()
 #endif
 {
 #if PY_MAJOR_VERSION >= 3

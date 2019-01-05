@@ -25,7 +25,7 @@ public:
     };
 
     bool is_periodic;
-    std::vector<Atom> atoms;
+    std::vector <Atom> atoms;
     double basis_vector[3][3];
 
     void SetBasis(const double *v) {
@@ -57,13 +57,13 @@ template<uint rank, typename g_func, typename w_func, typename d_func, typename 
 class MBTR {
     // definitions of the MBTR
     const System &system_;
-    std::vector<std::pair<double, double>> bounds_;
+    std::vector <std::pair<double, double>> bounds_;
 
     // inner states for performing the summation
     const System::Atom *selected_atoms_[rank];
 
     // periodic systems
-    std::vector<System::Atom> reflected_cells_;
+    std::vector <System::Atom> reflected_cells_;
     size_t firstcell_atoms_index_begin_, firstcell_atoms_index_end_;
 
     // functions
@@ -148,7 +148,7 @@ class MBTR {
 
     }
 
-    void CalculateMBTRInnerLoop(const std::vector<System::Atom> &atoms,
+    void CalculateMBTRInnerLoop(const std::vector <System::Atom> &atoms,
                                 uint z[], std::vector<double> &v,
                                 uint current_rank) {
         for (size_t j = 0; j < atoms.size(); ++j) {
@@ -180,7 +180,7 @@ class MBTR {
         }
     }
 
-    void CalculateMBTRFirstLoopPeriodic(const std::vector<System::Atom> &atoms,
+    void CalculateMBTRFirstLoopPeriodic(const std::vector <System::Atom> &atoms,
                                         uint z[], std::vector<double> &v) {
 
         for (size_t j = firstcell_atoms_index_begin_; j < firstcell_atoms_index_end_; ++j) {
@@ -206,7 +206,7 @@ class MBTR {
     }
 
     void WriteMBTRToArray(double *array, uint current_rank,
-                          std::vector<uint> &an, std::vector<uint> &idx) {
+                          std::vector <uint> &an, std::vector <uint> &idx) {
 
         double *current_column = array;
         size_t stride = bounds_.size();
@@ -287,8 +287,8 @@ public:
         return v;
     }
 
-    std::vector<uint> NotNullAtomNumbers() {
-        std::vector<uint> an;
+    std::vector <uint> NotNullAtomNumbers() {
+        std::vector <uint> an;
         for (auto i:system_.atoms) {
             if (an.end() == std::find(an.begin(), an.end(), i.atom_number)) {
                 an.push_back(i.atom_number);
@@ -298,7 +298,7 @@ public:
         return an;
     }
 
-    double *WriteMBTRToArray(std::vector<uint> &an, size_t &array_size) {
+    double *WriteMBTRToArray(std::vector <uint> &an, size_t &array_size) {
         // FIXME: potential overflow.
         size_t buffer_total_size = bounds_.size();
         for (uint i = 0; i < rank; i++) {
@@ -312,7 +312,7 @@ public:
         if (array == nullptr)
             return nullptr;
 
-        std::vector<uint> idx;
+        std::vector <uint> idx;
         WriteMBTRToArray(array, 1, an, idx);
 
         return array;
