@@ -46,9 +46,9 @@ class TestCrystalXYZRead(unittest.TestCase):
         nacl = crystals[0]
         self.assertTrue(nacl['is_periodic'])
         self.assertListEqual(nacl['properties'], ['0.0'])
-        self.assertEqual(len(nacl['atoms']), 8)
+        self.assertEqual(len(nacl['atoms']), 2)
         atom_counter = collections.Counter(x[0] for x in nacl['atoms'])
-        self.assertDictEqual(atom_counter, {11: 4, 17: 4})
+        self.assertDictEqual(atom_counter, {11: 1, 17: 1})
         self.assertListEqual(
             list(nacl['basis_vector']),
             [2.820100, 2.820100, 0.000000,

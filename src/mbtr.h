@@ -5,7 +5,6 @@
 #include <cmath>
 #include <exception>
 #include <algorithm>
-#include <ostream>
 
 typedef unsigned int uint;
 
