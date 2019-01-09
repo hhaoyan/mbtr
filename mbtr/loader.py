@@ -26,13 +26,14 @@ PT = {
 ANGSTROM_TO_ATOMIC = 100.0 / 52.917720859
 
 
-def _read_molecule(stream):
+def _read_molecule(stream, transform_unit):
     """
     Reads molecule structures in XYZ file stream.
 
     Note: this function assumes XYZ file coordinates in Angstrom unit.
 
     :param stream: Stream of XYZ file.
+    :param transform_unit: Transform values into different unit.
     :return: A molecular structure.
     """
     line = stream.readline()
@@ -49,9 +50,9 @@ def _read_molecule(stream):
             raise ValueError('Each atom line must have more '
                              'than four fields (an, px, py, pz)')
         atoms.append((PT[values[0]],
-                      float(values[1]) * ANGSTROM_TO_ATOMIC,
-                      float(values[2]) * ANGSTROM_TO_ATOMIC,
-                      float(values[3]) * ANGSTROM_TO_ATOMIC))
+                      float(values[1]) * transform_unit,
+                      float(values[2]) * transform_unit,
+                      float(values[3]) * transform_unit))
 
     return {
         'is_periodic': False,
@@ -60,7 +61,7 @@ def _read_molecule(stream):
     }
 
 
-def _read_crystal(stream):
+def _read_crystal(stream, transform_unit):
     """
     Reads crystal structures in modified XYZ file stream.
     The modified XYZ file format: there will be one more line
@@ -69,6 +70,7 @@ def _read_crystal(stream):
     Note: this function assumes XYZ file coordinates in Angstrom unit.
 
     :param stream: Stream of XYZ file.
+    :param transform_unit: Transform values into different unit.
     :return: A crystal structure.
     """
     line = stream.readline()
@@ -78,7 +80,7 @@ def _read_crystal(stream):
 
     properties = re.split(r'\s+', stream.readline().strip())
     basis_vectors = tuple(
-        float(x)
+        float(x) * transform_unit
         for x in re.split(r'\s+', stream.readline().strip())
     )
     atoms = []
@@ -89,9 +91,9 @@ def _read_crystal(stream):
             raise ValueError('Each atom line must have more '
                              'than four fields (an, px, py, pz)')
         atoms.append((PT[values[0]],
-                      float(values[1]) * ANGSTROM_TO_ATOMIC,
-                      float(values[2]) * ANGSTROM_TO_ATOMIC,
-                      float(values[3]) * ANGSTROM_TO_ATOMIC))
+                      float(values[1]) * transform_unit,
+                      float(values[2]) * transform_unit,
+                      float(values[3]) * transform_unit))
 
     return {
         'is_periodic': True,
@@ -101,13 +103,15 @@ def _read_crystal(stream):
     }
 
 
-def read_xyz_molecule(filename):
+def read_xyz_molecule(filename, transform_unit=ANGSTROM_TO_ATOMIC):
     """
     Read molecule definitions in XYZ file into an array.
     Note: this function assumes XYZ file coordinates in Angstrom unit.
 
     :param filename: Filename of the XYZ file.
     :type filename: str
+    :param transform_unit: Transform values into different unit.
+    :type transform_unit: float
     :return: List of molecules
     :rtype: list(dict)
     """
@@ -115,7 +119,7 @@ def read_xyz_molecule(filename):
     with open(filename) as f:
         while True:
             try:
-                molecules.append(_read_molecule(f))
+                molecules.append(_read_molecule(f, transform_unit))
             except EOFError:
                 break
             except ValueError:
@@ -124,13 +128,15 @@ def read_xyz_molecule(filename):
     return molecules
 
 
-def read_xyz_crystal(filename):
+def read_xyz_crystal(filename, transform_unit=1.0):
     """
     Read crystal definitions in XYZ file into an array.
     Note: this function assumes XYZ file coordinates in Angstrom unit.
 
     :param filename: Filename of the XYZ file.
     :type filename: str
+    :param transform_unit: Transform values into different unit.
+    :type transform_unit: float
     :return: List of crystals
     :rtype: list(dict)
     """
@@ -138,7 +144,7 @@ def read_xyz_crystal(filename):
     with open(filename) as f:
         while True:
             try:
-                crystals.append(_read_crystal(f))
+                crystals.append(_read_crystal(f, transform_unit))
             except EOFError:
                 break
             except ValueError:

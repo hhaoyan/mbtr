@@ -51,10 +51,16 @@ class TestCrystalXYZRead(unittest.TestCase):
         self.assertDictEqual(atom_counter, {11: 4, 17: 4})
         self.assertListEqual(
             list(nacl['basis_vector']),
-            [5.640200, 0.000000, 0.000000,
-             0.000000, 5.640200, 0.000000,
-             0.000000, 0.000000, 5.640200]
+            [2.820100, 2.820100, 0.000000,
+             0.000000, 2.820100, 2.820100,
+             2.820100, 0.000000, 2.820100]
         )
+        self.assertListEqual(
+            nacl['atoms'],
+            [
+                (11, 0.000000, 0.000000, 0.000000),
+                (17, 2.820100, 2.820100, 2.820100),
+            ])
 
     def test_read_many(self):
         oqmd_mgo_fn = os.path.join(
