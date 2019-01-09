@@ -68,10 +68,19 @@ def run_experiment():
             )
         ),
         GaussianKernel,
-        16,
-        1e-3
+        4.52616e-01, 2.27374e-16
     )
     auto_train.auto_train()
+
+    rmse, mae, r2 = auto_train.krr.validate(
+        (
+            numpy.array(list(x['rep'] for x in valid)),
+            numpy.array(list(x['atomization_energy'] for x in valid)),
+        )
+    )
+    logging.info('Final parameters: sigma: %.5e, %.5e', auto_train.sigma, auto_train.noise_level)
+    logging.debug('Model performance on validation set: RMSE: %.6f, MAE: %.6f, R2: %.6f',
+                  rmse, mae, r2)
 
 
 if __name__ == '__main__':
