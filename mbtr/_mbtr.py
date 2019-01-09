@@ -18,8 +18,9 @@ __all__ = [
 
 
 class BaseMBTR(object):
-    def __init__(self, grid_size, smearing_factor=0.01, d=2.0):
-        self.tensor_range = None
+    def __init__(self, grid_size, smearing_factor=0.01, d=2.0,
+                 tensor_range=None):
+        self.tensor_range = tensor_range
         self.grid_size = grid_size
         self.smearing_factor = float(smearing_factor)
         self.d = float(d)
