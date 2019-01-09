@@ -16,4 +16,4 @@ pip install -e .
 python examples/visualize.py
 ```
 
-![aspirin structure](aspirin.png)
+![aspirin structure](visualize.png)
