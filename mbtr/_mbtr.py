@@ -128,6 +128,14 @@ class BaseMBTR(object):
         return final_array.reshape(shape)
 
     def transform(self, dataset, sparse=False):
+        """
+        Transform dataset into MBTR representation.
+
+        :param dataset: List of structures.
+        :param sparse:
+        :return: Arrays and atomic numbers.
+        :rtype: tuple(list(numpy.ndarray), list(int))
+        """
         if not self.configured:
             raise ValueError('MBTR is not configured, call fit() first.')
 
