@@ -7,6 +7,22 @@
  *   Haoyan Huo and Matthias Rupp, Unified Representation for Machine Learning of
  *   Molecules and Crystals, arXiv:1704.06439 (2017).
  *   Please also refer to http://qmml.org/
+ *
+ * TODO: There are still plenty of room to improve this code, e.g.:
+ * 1. For certain geometry and weighting functions, different atoms pairs can generate
+ * same results. For example, if g = 1/r12, then atom pair AB and BA generate the
+ * same tensor values, which leads to at least 2*2 performance gain.
+ * 2. This code uses a simple loop to sum up tensor values. However, it maybe much
+ * faster to use CPU/GPU vector instructions (such as MMX) to speed up this process.
+ * 3. The limiting factor is the evaluation of density functions. Currently, to speed
+ * up calculation, this code uses a discrete N(0, sigma) distribution (see class
+ * DiscreteErfDensity). However, advanced calculation may significantly speed up this
+ * calculation.
+ * 4. The use of multi-threading.
+ * 5. ...
+ *
+ * These improvements can help this code achieve more than 10x faster (especially for
+ * time-consuming 3D MBTR evaluation.
  * */
 
 std::vector <uint> AtomNumberList(std::vector <System> &systems) {
