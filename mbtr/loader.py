@@ -103,7 +103,7 @@ def _read_crystal(stream, transform_unit):
     }
 
 
-def read_xyz_molecule(filename, transform_unit=ANGSTROM_TO_ATOMIC):
+def read_xyz_molecule(filename, transform_unit=1.0):
     """
     Read molecule definitions in XYZ file into an array.
     Note: this function assumes XYZ file coordinates in Angstrom unit.
