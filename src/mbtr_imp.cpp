@@ -2,36 +2,11 @@
 #include "presets.h"
 
 /*
- * Compute MBTR from molecular/crystal structures (ver 0.01).
+ * Compute MBTR from molecular/crystal structures.
  * Publication:
  *   Haoyan Huo and Matthias Rupp, Unified Representation for Machine Learning of
  *   Molecules and Crystals, arXiv:1704.06439 (2017).
  *   Please also refer to http://qmml.org/
- * ===============================================================================
- *
- *   Args:
- *       -preset id    - use one of the following presets, see below.
- *       -tensor_range - the beginning/ending of the interval for the last dimension
- *                       of MBTR.
- *       -rank uint    - tensor rank (default:2).
- *       -sigma float  - smearing width (default:0.02).
- *       -grid uint    - grid size for the last dimension of MBTR (default:20).
- *       -D float      - parameter D in weighting funciton (default:4.0).
- *   Note:
- *       1. In either case, atom coordinates must be cartesian.
- *       2. For periodic xyz file, one line containing basis vectors (nine numbers)
- *          should be inserted before atom lines.
- *   Presets:
- *       You must choose from the following presets:
- *          101. Molecular  rank=1  g=1         w=none          d=gaussian  corr=delta(z1, z2).
- *          102. Molecular  rank=2  g=1/r       w=none          d=gaussian  corr=delta(z1, z2).
- *          103. Molecular  rank=2  g=1/r       w=1/r^2         d=gaussian  corr=delta(z1, z2).
- *          104. Molecular  rank=2  g=1/r       w=r^2           d=gaussian  corr=delta(z1, z2).
- *          105. Molecular  rank=3  g=cos(angle)w=none          d=gaussian  corr=delta(z1, z2).
- *          151. Periodic   rank=1  g=1         w=none          d=gaussian  corr=delta(z1, z2).
- *          152. Periodic   rank=2  g=1/r       w=exp(-r/D)     d=gaussian  corr=delta(z1, z2).
- *          153. Periodic   rank=2  g=1/r       w=exp(-r^2/D)   d=gaussian  corr=delta(z1, z2).
- *          154. Periodic   rank=3  g=cos(angle)w=exp(-(r1+r2+r3)/D)    d=gaussian  corr=delta(z1, z2).
  * */
 
 std::vector <uint> AtomNumberList(std::vector <System> &systems) {

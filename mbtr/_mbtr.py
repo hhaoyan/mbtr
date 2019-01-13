@@ -18,6 +18,23 @@ __all__ = [
 
 
 class BaseMBTR(object):
+    """
+    Base class for all MBTR implementation. This class uses
+    parameters to call an C++ python extension, and wraps the
+    MBTR results.
+
+    The internal of this implementation uses four functions, for
+    formal definition, please see https://arxiv.org/pdf/1704.06439.pdf:
+
+    Geometry function:  Determines how the relations among atoms
+        are encoded in MBTR. Corresponds to g_k(i) in Eq. 3.
+    Weighting function: Determines how important a tuple of atoms
+        are encoded in MBTR. Corresponds to w_k(i) in Eq. 3.
+    Density function:   Determines how the tuple of atoms is put, or
+        broadened into MBTR. Corresponds to D(x, g) in Eq. 3.
+    Correlation function: Determines how different atoms affect
+        each other. Corresponds to C_zi in Eq. 3.
+    """
     def __init__(self, grid_size, smearing_factor=0.01, d=2.0,
                  tensor_range=None):
         self.tensor_range = tensor_range
@@ -84,6 +101,13 @@ class BaseMBTR(object):
         return self.tensor_range is not None
 
     def fit(self, dataset):
+        """
+        Determine tensor_range (last dimension). If you specify
+        tensor_range when creating this MBTR, this should not be
+        called again.
+
+        :param dataset: list of molecules.
+        """
         if self.configured:
             raise ValueError('MBTR is alrady configured.')
 
@@ -134,7 +158,7 @@ class BaseMBTR(object):
 
         :param dataset: List of structures.
         :param sparse:
-        :return: Arrays and atomic numbers.
+        :return: Arrays and sorted atomic numbers.
         :rtype: tuple(list(numpy.ndarray), list(int))
         """
         if not self.configured:
@@ -161,60 +185,140 @@ class BaseMBTR(object):
 
 
 class MolsMBTR1D(BaseMBTR):
+    """
+    1D MBTR for molecules.
+
+    Geometry function:      1
+    Weighting function:     1
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 1
     preset_id = 101
     is_periodic = False
 
 
 class MolsMBTR2D(BaseMBTR):
+    """
+    2D MBTR for molecules.
+
+    Geometry function:      1/pair_distance
+    Weighting function:     1
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 2
     preset_id = 102
     is_periodic = False
 
 
 class MolsMBTR2DIQuadW(BaseMBTR):
+    """
+    2D MBTR for molecules.
+
+    Geometry function:      1/pair_distance
+    Weighting function:     1/pair_distance^2
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 2
     preset_id = 103
     is_periodic = False
 
 
 class MolsMBTR2DQuadW(BaseMBTR):
+    """
+    2D MBTR for molecules.
+
+    Geometry function:      1/pair_distance
+    Weighting function:     pair_distance^2
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 2
     preset_id = 104
     is_periodic = False
 
 
 class MolsMBTR3D(BaseMBTR):
+    """
+    3D MBTR for molecules.
+
+    Geometry function:      cos(angle_ABC)
+    Weighting function:     1
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 3
     preset_id = 105
     is_periodic = False
 
 
 class MolsMBTR3DAngle(BaseMBTR):
+    """
+    3D MBTR for molecules.
+
+    Geometry function:      angle_ABC (0 <= angle <= pi)
+    Weighting function:     1/(rAB rAC rBC)
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 3
     preset_id = 106
     is_periodic = False
 
 
 class PeriodicMBTR1D(BaseMBTR):
+    """
+    1D MBTR for crystals.
+
+    Geometry function:      1
+    Weighting function:     within unit cell
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 1
     preset_id = 151
     is_periodic = True
 
 
 class PeriodicMBTR2D(BaseMBTR):
+    """
+    2D MBTR for crystals.
+
+    Geometry function:      1/pair_distance
+    Weighting function:     exp(-pair_distance/D)
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 2
     preset_id = 152
     is_periodic = True
 
 
 class PeriodicMBTR3D(BaseMBTR):
+    """
+    3D MBTR for crystals.
+
+    Geometry function:      cosine(angle_ABC)
+    Weighting function:     exp(-(rAB + rAC + rBC)/D)
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 3
     preset_id = 154
     is_periodic = True
 
 
 class PeriodicMBTR3DAngle(BaseMBTR):
+    """
+    3D MBTR for crystals.
+
+    Geometry function:      angle_ABC (0 <= angle <= pi)
+    Weighting function:     1/(rAB rAC rBC)
+    Density function:       N(0, sigma)
+    Correlation function:   delta(z1, z2)
+    """
     rank = 3
     preset_id = 155
     is_periodic = True
