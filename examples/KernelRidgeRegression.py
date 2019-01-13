@@ -5,7 +5,12 @@ import numpy
 import scipy.linalg
 import scipy.sparse
 import scipy.spatial
+import sklearn.metrics
 from sklearn.metrics.pairwise import euclidean_distances
+
+__author__ = "Haoyan Huo"
+__maintainer__ = "Haoyan Huo"
+__email__ = "haoyan.huo@lbl.gov"
 
 
 class Kernel(object):
@@ -116,22 +121,10 @@ class KernelRidgeRegression(object):
 
     @staticmethod
     def stat(y, hat_y):
-        assert len(y.shape) == len(hat_y.shape) == 1
-        assert y.shape[0] == hat_y.shape[0]
-
-        rmse = numpy.sqrt(numpy.mean((hat_y - y) ** 2))
-        mae = numpy.mean(numpy.absolute(hat_y - y))
-
-        N = hat_y.size
-        cross_mean = numpy.mean(hat_y * y)
-        y_mean = numpy.mean(y)
-        hat_y_mean = numpy.mean(hat_y)
-        y_2_mean = numpy.mean(y ** 2)
-        hat_y_2_mean = numpy.mean(hat_y ** 2)
-        r_squared = (N * cross_mean - hat_y_mean * y_mean) ** 2 / (N * hat_y_2_mean - hat_y_mean ** 2) / (
-                N * y_2_mean - y_mean ** 2)
-
-        return rmse, mae, r_squared
+        rmse = numpy.sqrt(sklearn.metrics.mean_squared_error(y, hat_y))
+        mae = sklearn.metrics.mean_absolute_error(y, hat_y)
+        r2 = sklearn.metrics.r2_score(y, hat_y)
+        return rmse, mae, r2
 
     def validate(self, input_data):
         """

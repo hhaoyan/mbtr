@@ -107,4 +107,49 @@ public:
     }
 };
 
+class TripletAngleG {
+    double _min, _max;
+public:
+    TripletAngleG() {
+        _min = std::numeric_limits<double>::max();
+        _max = std::numeric_limits<double>::min();
+    }
+
+    void reset_minmax() {
+        _min = std::numeric_limits<double>::max();
+        _max = std::numeric_limits<double>::min();
+    }
+
+    const std::pair<double, double> get_minmax() const {
+        return std::make_pair(_min, _max);
+    }
+
+    double operator()(const System::Atom *atoms[]) {
+        double distance1_squared = (
+                (atoms[0]->position[0] - atoms[1]->position[0]) * (atoms[0]->position[0] - atoms[1]->position[0]) +
+                (atoms[0]->position[1] - atoms[1]->position[1]) * (atoms[0]->position[1] - atoms[1]->position[1]) +
+                (atoms[0]->position[2] - atoms[1]->position[2]) * (atoms[0]->position[2] - atoms[1]->position[2])
+        );
+        double distance2_squared = (
+                (atoms[0]->position[0] - atoms[2]->position[0]) * (atoms[0]->position[0] - atoms[2]->position[0]) +
+                (atoms[0]->position[1] - atoms[2]->position[1]) * (atoms[0]->position[1] - atoms[2]->position[1]) +
+                (atoms[0]->position[2] - atoms[2]->position[2]) * (atoms[0]->position[2] - atoms[2]->position[2])
+        );
+        double distance3_squared = (
+                (atoms[1]->position[0] - atoms[2]->position[0]) * (atoms[1]->position[0] - atoms[2]->position[0]) +
+                (atoms[1]->position[1] - atoms[2]->position[1]) * (atoms[1]->position[1] - atoms[2]->position[1]) +
+                (atoms[1]->position[2] - atoms[2]->position[2]) * (atoms[1]->position[2] - atoms[2]->position[2])
+        );
+        double cosine = (distance1_squared + distance3_squared - distance2_squared)
+                        / sqrt(4.0f * distance1_squared * distance3_squared);
+        cosine = cosine > 1.0 ? 1.0 : (cosine < -1.0 ? -1.0 : cosine);
+        double angle = std::acos(cosine);
+
+        _min = std::min(_min, angle);
+        _max = std::max(_max, angle);
+
+        return angle;
+    }
+};
+
 #endif // _GEOMETRY_FUNCS_H_

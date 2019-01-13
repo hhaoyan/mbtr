@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 import numpy
 from mbtr import read_xyz_molecule, MolsMBTR2DIQuadW, read_xyz_crystal, PeriodicMBTR3D
 
+__author__ = "Haoyan Huo"
+__maintainer__ = "Haoyan Huo"
+__email__ = "haoyan.huo@lbl.gov"
+
 
 def visualize_mbtr(array, lines, x_range, title='Visualize'):
     fig = plt.figure()

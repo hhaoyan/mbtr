@@ -30,15 +30,17 @@ struct PresetInfo {
 
 const char *PresetErrorMsg =
         "You must choose from the following presets:"
-        "  101. Molecular\trank=1\tg=1\t\tw=none\t\td=gaussian\tcorr=delta(z1, z2).\n"
-        "  102. Molecular\trank=2\tg=1/r\t\tw=none\t\td=gaussian\tcorr=delta(z1, z2).\n"
-        "  103. Molecular\trank=2\tg=1/r\t\tw=1/r^2\t\td=gaussian\tcorr=delta(z1, z2).\n"
-        "  104. Molecular\trank=2\tg=1/r\t\tw=r^2\t\td=gaussian\tcorr=delta(z1, z2).\n"
-        "  105. Molecular\trank=3\tg=cos(angle)\tw=none\t\td=gaussian\tcorr=delta(z1, z2).\n"
-        "  151. Periodic\trank=1\tg=1\t\tw=none\t\td=gaussian\tcorr=delta(z1, z2).\n"
-        "  152. Periodic\trank=2\tg=1/r\t\tw=exp(-r/D)\td=gaussian\tcorr=delta(z1, z2).\n"
-        "  153. Periodic\trank=2\tg=1/r\t\tw=exp(-r^2/D)\td=gaussian\tcorr=delta(z1, z2).\n"
-        "  154. Periodic\trank=3\tg=cos(angle)\tw=exp(-(r1+r2+r3)/D)\td=gaussian\tcorr=delta(z1, z2).\n";
+        "  101. Molecular\trank=1\tg=1\tw=none\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  102. Molecular\trank=2\tg=1/r\tw=none\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  103. Molecular\trank=2\tg=1/r\tw=1/r^2\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  104. Molecular\trank=2\tg=1/r\tw=r^2\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  105. Molecular\trank=3\tg=cos(angle)\tw=none\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  106. Molecular\trank=3\tg=angle\tw=1/r1r2r3\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  151. Periodic\trank=1\tg=1\tw=none\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  152. Periodic\trank=2\tg=1/r\tw=exp(-r/D)\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  153. Periodic\trank=2\tg=1/r\tw=exp(-r^2/D)\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  154. Periodic\trank=3\tg=cos(angle)\tw=exp(-(r1+r2+r3)/D)\td=gaussian\tcorr=delta(z1, z2).\n"
+        "  155. Periodic\trank=3\tg=angle\tw=1/r1r2r3\td=gaussian\tcorr=delta(z1, z2).\n";
 
 #define RequirePeriodic(preset_id, info) if (!(info).is_periodic) { \
     PyErr_SetString(PyExc_ValueError, \
@@ -57,9 +59,10 @@ const char *PresetErrorMsg =
     FitTensorLastDimRange<rank>((info).systems, output, g, w, d, c);}
 
 bool PresetsFitMBTR(PresetInfo &info, std::pair<double, double> &output) {
-    InverseTripletCosineAngleG g_3body_cos_angle;
-    InverseDoubletDistanceG g_2body_inv_r;
     OneBodyCountingG g_1body_1;
+    InverseDoubletDistanceG g_2body_inv_r;
+    InverseTripletCosineAngleG g_3body_cos_angle;
+    TripletAngleG g_3body_angle;
 
     NoWeightingW w_none;
     DoubletDistanceInvQuadraticWeightingW w_2body_inv_r2;
@@ -67,7 +70,7 @@ bool PresetsFitMBTR(PresetInfo &info, std::pair<double, double> &output) {
     DoubletDistanceExponentialWeightingW w_2body_exp_nr(info.D);
     DoubletDistanceSquaredExponentialWeightingW w_2body_exp_nr2(info.D);
     TripletDistanceExponentialWeightingW w_3body_exp_r_sum(info.D);
-
+    TripletInverseDottedDistanceWeightingW w_3body_1_3r_doted;
 
     ErfDensity d_gaussian(info.sigma);
 
@@ -94,6 +97,10 @@ bool PresetsFitMBTR(PresetInfo &info, std::pair<double, double> &output) {
             RequireMolecular(105, info);
             FitMBTR(3, info, output, g_3body_cos_angle, w_none, d_gaussian, corr_delta);
 
+        case 106:
+            RequireMolecular(106, info);
+            FitMBTR(3, info, output, g_3body_angle, w_3body_1_3r_doted, d_gaussian, corr_delta);
+
         case 151:
             RequirePeriodic(151, info);
             FitMBTR(1, info, output, g_1body_1, w_none, d_gaussian, corr_delta);
@@ -110,6 +117,10 @@ bool PresetsFitMBTR(PresetInfo &info, std::pair<double, double> &output) {
             RequirePeriodic(154, info);
             FitMBTR(3, info, output, g_3body_cos_angle, w_3body_exp_r_sum, d_gaussian, corr_delta);
 
+        case 155:
+            RequirePeriodic(155, info);
+            FitMBTR(3, info, output, g_3body_angle, w_3body_1_3r_doted, d_gaussian, corr_delta);
+
         default:
             PyErr_SetString(PyExc_ValueError, PresetErrorMsg);
             return false;
@@ -117,9 +128,10 @@ bool PresetsFitMBTR(PresetInfo &info, std::pair<double, double> &output) {
 }
 
 bool PresetsComputeMBTR(PresetInfo &info, std::vector <MBTRResult> &arrays) {
-    InverseTripletCosineAngleG g_3body_cos_angle;
-    InverseDoubletDistanceG g_2body_inv_r;
     OneBodyCountingG g_1body_1;
+    InverseDoubletDistanceG g_2body_inv_r;
+    InverseTripletCosineAngleG g_3body_cos_angle;
+    TripletAngleG g_3body_angle;
 
     NoWeightingW w_none;
     DoubletDistanceInvQuadraticWeightingW w_2body_inv_r2;
@@ -127,6 +139,7 @@ bool PresetsComputeMBTR(PresetInfo &info, std::vector <MBTRResult> &arrays) {
     DoubletDistanceExponentialWeightingW w_2body_exp_nr(info.D);
     DoubletDistanceSquaredExponentialWeightingW w_2body_exp_nr2(info.D);
     TripletDistanceExponentialWeightingW w_3body_exp_r_sum(info.D);
+    TripletInverseDottedDistanceWeightingW w_3body_1_3r_doted;
 
     ErfDensity d_gaussian(info.sigma);
 
@@ -153,6 +166,10 @@ bool PresetsComputeMBTR(PresetInfo &info, std::vector <MBTRResult> &arrays) {
             RequireMolecular(105, info);
             ReturnMBTR(3, info, arrays, g_3body_cos_angle, w_none, d_gaussian, corr_delta);
 
+        case 106:
+            RequireMolecular(106, info);
+            ReturnMBTR(3, info, arrays, g_3body_angle, w_3body_1_3r_doted, d_gaussian, corr_delta);
+
         case 151:
             RequirePeriodic(151, info);
             ReturnMBTR(1, info, arrays, g_1body_1, w_none, d_gaussian, corr_delta);
@@ -168,6 +185,10 @@ bool PresetsComputeMBTR(PresetInfo &info, std::vector <MBTRResult> &arrays) {
         case 154:
             RequirePeriodic(154, info);
             ReturnMBTR(3, info, arrays, g_3body_cos_angle, w_3body_exp_r_sum, d_gaussian, corr_delta);
+
+        case 155:
+            RequirePeriodic(155, info);
+            ReturnMBTR(3, info, arrays, g_3body_angle, w_3body_1_3r_doted, d_gaussian, corr_delta);
 
         default:
             PyErr_SetString(PyExc_ValueError, PresetErrorMsg);

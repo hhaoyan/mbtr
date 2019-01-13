@@ -12,8 +12,8 @@ __email__ = "haoyan.huo@lbl.gov"
 
 __all__ = [
     'MolsMBTR1D', 'MolsMBTR2D', 'MolsMBTR3D',
-    'MolsMBTR2DQuadW', 'MolsMBTR2DIQuadW',
-    'PeriodicMBTR1D', 'PeriodicMBTR2D', 'PeriodicMBTR3D'
+    'MolsMBTR2DQuadW', 'MolsMBTR2DIQuadW', 'MolsMBTR3DAngle',
+    'PeriodicMBTR1D', 'PeriodicMBTR2D', 'PeriodicMBTR3D', 'PeriodicMBTR3DAngle',
 ]
 
 
@@ -190,6 +190,12 @@ class MolsMBTR3D(BaseMBTR):
     is_periodic = False
 
 
+class MolsMBTR3DAngle(BaseMBTR):
+    rank = 3
+    preset_id = 106
+    is_periodic = False
+
+
 class PeriodicMBTR1D(BaseMBTR):
     rank = 1
     preset_id = 151
@@ -205,4 +211,10 @@ class PeriodicMBTR2D(BaseMBTR):
 class PeriodicMBTR3D(BaseMBTR):
     rank = 3
     preset_id = 154
+    is_periodic = True
+
+
+class PeriodicMBTR3DAngle(BaseMBTR):
+    rank = 3
+    preset_id = 155
     is_periodic = True

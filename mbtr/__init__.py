@@ -8,6 +8,6 @@ __email__ = "haoyan.huo@lbl.gov"
 __all__ = [
     'read_xyz_molecule', 'read_xyz_crystal',
     'MolsMBTR1D', 'MolsMBTR2D', 'MolsMBTR3D',
-    'MolsMBTR2DQuadW', 'MolsMBTR2DIQuadW',
-    'PeriodicMBTR1D', 'PeriodicMBTR2D', 'PeriodicMBTR3D',
+    'MolsMBTR2DQuadW', 'MolsMBTR2DIQuadW', 'MolsMBTR3DAngle',
+    'PeriodicMBTR1D', 'PeriodicMBTR2D', 'PeriodicMBTR3D', 'PeriodicMBTR3DAngle',
 ]
