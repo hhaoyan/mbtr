@@ -100,4 +100,24 @@ public:
     }
 };
 
+class TripletInverseDottedDistanceWeightingW {
+public:
+    double operator()(const System::Atom *atoms[]) {
+        double dot12 =
+                (atoms[0]->position[0] - atoms[1]->position[0]) * (atoms[0]->position[0] - atoms[1]->position[0]) +
+                (atoms[0]->position[1] - atoms[1]->position[1]) * (atoms[0]->position[1] - atoms[1]->position[1]) +
+                (atoms[0]->position[2] - atoms[1]->position[2]) * (atoms[0]->position[2] - atoms[1]->position[2]);
+        double dot13 =
+                (atoms[0]->position[0] - atoms[2]->position[0]) * (atoms[0]->position[0] - atoms[2]->position[0]) +
+                (atoms[0]->position[1] - atoms[2]->position[1]) * (atoms[0]->position[1] - atoms[2]->position[1]) +
+                (atoms[0]->position[2] - atoms[2]->position[2]) * (atoms[0]->position[2] - atoms[2]->position[2]);
+        double dot23 =
+                (atoms[1]->position[0] - atoms[2]->position[0]) * (atoms[1]->position[0] - atoms[2]->position[0]) +
+                (atoms[1]->position[1] - atoms[2]->position[1]) * (atoms[1]->position[1] - atoms[2]->position[1]) +
+                (atoms[1]->position[2] - atoms[2]->position[2]) * (atoms[1]->position[2] - atoms[2]->position[2]);
+
+        return 1.0 / (dot12 * dot13 * dot23);
+    }
+};
+
 #endif // _WEIGHTING_FUNCS_H_
