@@ -1,3 +1,7 @@
+tmp/
+notebooks/datasets/
+notebooks/results/**/*
+
 .idea/
 .DS_Store
 

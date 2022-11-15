@@ -1,0 +1,10 @@
+coloredlogs
+# jax
+humanize
+numpy
+opt_einsum
+opt-einsum-torch
+scipy
+scikit-learn
+torch>=1.8.0
+tqdm

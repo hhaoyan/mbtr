@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+\title{sGDML Math}
+\author{Haoyan Huo}
+\date{September 2021}
+
+\begin{document}
+
+\maketitle
+
+\section{The Math}
+
+\subsection{Kernel}
+
+\begin{align*}
+    K_{Matern} &= \left[\sum_{k=0}^n \frac{(n+k)!}{(2n)!} \binom{n}{k} \left(\frac{2\sqrt{2\nu }d}{\sigma}\right)^{n-k}\right] \exp\left(-\frac{\sqrt{5}d}{\sigma}\right)\\
+    &= \left[\frac{1}{12} \left(\frac{2\sqrt{5}d}{\sigma}\right)^2 + \frac{1}{2} \frac{2\sqrt{5}d}{\sigma} + 1\right]\exp\left(-\frac{\sqrt{5}d}{\sigma}\right)\\
+    &= \left[\frac{5}{3} \frac{d^2}{\sigma^2} + \frac{\sqrt{5}d}{\sigma} + 1\right]\exp\left(-\frac{\sqrt{5}d}{\sigma}\right)\\
+    \frac{\partial K_{Matern}}{\partial d} &= -\frac{5d}{3\sigma^4} (\sigma^2 + \sqrt{5}\sigma d)\exp\left(-\frac{\sqrt{5}}{\sigma} d\right)\\
+    \frac{\partial K_{Matern}}{\partial x_i^m} &= \sum_k \frac{\partial K_{Matern}}{\partial d}\frac{\partial d}{\partial R_k}\frac{\partial R_k}{\partial x_i^m}\\
+    &= -\frac{5d}{3\sigma^4} (\sigma^2 + \sqrt{5}\sigma d)\exp\left(-\frac{\sqrt{5}}{\sigma} d\right) \frac{\sum_k (R_i-R_j)^k\frac{\partial R_i^k}{\partial x_i^m}}{d} \\
+    &= -\frac{5}{3\sigma^4} (\sigma^2 + \sqrt{5}\sigma d)\exp\left(-\frac{\sqrt{5}}{\sigma} d\right) \sum_k (R_i-R_j)^k\frac{\partial R_i^k}{\partial x_i^m}\\
+    \frac{\partial ^2 K_{Matern}}{\partial x_i^m \partial x_j^n} &= \frac{\partial \left(-\frac{5}{3\sigma^4} (\sigma^2 + \sqrt{5}\sigma d)\exp\left(-\frac{\sqrt{5}}{\sigma} d\right)\right)}{\partial d}\frac{\partial d}{\partial R_j}\frac{\partial R_j}{\partial x_j^n}\cdot \left(\sum_k (R_i-R_j)^k\frac{\partial R_i^k}{\partial x_i^m}\right) \\
+    &\quad + -\frac{5}{3\sigma^4} (\sigma^2 + \sqrt{5}\sigma d)\exp\left(-\frac{\sqrt{5}}{\sigma} d\right) \frac{\partial\left(\sum_k (R_i-R_j)^k\frac{\partial R_i^k}{\partial x_i^m}\right)}{\partial R_j}\frac{\partial R_j}{\partial x_j^n}\\
+    &=- \frac{25}{3\sigma^4} \sum_l \left(\nabla_m R_i^l (R_i-R_j)^l\right)\left(\nabla_n R_j^k (R_i-R_j)^k\right) \exp\left(-\frac{\sqrt{5}}{\sigma} |R_i-R_j|\right) \\
+    & \quad + \frac{5}{3\sigma^4} (\sigma^2 + \sqrt{5}\sigma |R_i - R_j|) \sum_l \left(\nabla_m R_i^l \nabla_n R_j^l\right) \exp\left(-\frac{\sqrt{5}}{\sigma} |R_i-R_j|\right)
+\end{align*}
+
+\end{document}
