@@ -122,10 +122,12 @@ be found at [this link](https://figshare.com/articles/dataset/Unified_Representa
 If you use this code in your project, please consider citing:
 
 ```latex
-@article{huo2017unified,
-  title={Unified representation of molecules and crystals for machine learning},
-  author={Huo, Haoyan and Rupp, Matthias},
-  journal={arXiv preprint arXiv:1704.06439},
-  year={2017}
+@article{10.1088/2632-2153/aca005,
+	author={Huo, Haoyan and Rupp, Matthias},
+	title={Unified Representation of Molecules and Crystals for Machine Learning},
+	journal={Machine Learning: Science and Technology},
+	url={http://iopscience.iop.org/article/10.1088/2632-2153/aca005},
+	year={2022},
+	abstract={Accurate simulations of atomistic systems from first principles are limited by computational cost. In high-throughput settings, machine learning can reduce these costs significantly by accurately interpolating between reference calculations. For this, kernel learning approaches crucially require a representation that accommodates arbitrary atomistic systems. We introduce a many-body tensor representation that is invariant to translations, rotations, and nuclear permutations of same elements, unique, differentiable, can represent molecules and crystals, and is fast to compute. Empirical evidence for competitive energy and force prediction errors is presented for changes in molecular structure, crystal chemistry, and molecular dynamics using kernel regression and symmetric gradient-domain machine learning as models. Applicability is demonstrated for phase diagrams of Pt-group/transition-metal binary systems.}
 }
 ```
